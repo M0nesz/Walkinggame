@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <random_texts>
     <item percentage="15">You found a coin on the ground</item>
-    <item percentage="85">You're walking...</item>
+    <item percentage="60">You're walking...</item>
+    <item percentage="25">You look around and thinking were are you</item>
 </random_texts>

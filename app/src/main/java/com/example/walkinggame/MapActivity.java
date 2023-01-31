@@ -16,5 +16,14 @@ public class MapActivity extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class);// creates an intent for the MainActivity class
         Button backButton = findViewById(R.id.back_button);// finds the back button in the layout
         backButton.setOnClickListener(v-> startActivity(intent));// sets an onClickListener for the back button and starts the MainActivity when the back button is clicked
+
+        Button woodsButton = findViewById(R.id.woods_button);
+        woodsButton.setOnClickListener(v -> {
+            Intent mainIntent = new Intent(MapActivity.this, MainActivity.class);
+            mainIntent.putExtra("location", "Woods");
+            startActivity(mainIntent);
+        });
+
     }
+
 }
