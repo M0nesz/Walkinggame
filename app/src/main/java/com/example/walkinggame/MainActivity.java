@@ -8,25 +8,17 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    Random random = new Random();
 
     TextView textView;
     TextView textView_count;
     Button button;
 
-    int randomPercentage;
-    int coincount;
 
     // Initialize Button for accessing inventory
     Button inventorybutton;
@@ -41,14 +33,18 @@ public class MainActivity extends AppCompatActivity {
             // Add "Item (i+1)" to the list
             data.add("Item " + (i + 1));
         }
+
         ArrayList<String> dataArray = new ArrayList<>(data);
-        List<String> randomTexts = new ArrayList<>();
-        List<Integer> percentages = new ArrayList<>();
         setContentView(R.layout.activity_main);
         textView = findViewById(R.id.textView);
-        textView_count = findViewById(R.id.Coinscounter);
         button = findViewById(R.id.button);
         inventorybutton = findViewById(R.id.inventorybutton);
+        String location = getIntent().getStringExtra("location");
+        TextView locationTextView = findViewById(R.id.location_text_view);
+        locationTextView.setText(location);
+        TextView textView_count = findViewById(R.id.textView_count);
+
+
 
         // Read the coin count from "coin_save.xml"
         int coinCountReader = XmlReader.readFromXml(getApplicationContext(), "coin_save.xml");
@@ -56,57 +52,11 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        // Initialize a list to store 25 items
+        TextView textView = findViewById(R.id.textView);
+        Button button = findViewById(R.id.button);
 
-
-        try {
-            // Get the XML parser and set the input to be the "random_texts.xml" file
-            XmlPullParser parser = getResources().getXml(R.xml.random_texts);
-            // Parse the XML file until the end of the document is reached
-            while (parser.next() != XmlPullParser.END_DOCUMENT) {
-                // Check if the current event is a start tag and its name is "item"
-                if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("item")) {
-                    // If the start tag is an "item" tag, retrieve its "percentage" attribute value
-                    int percentage = Integer.parseInt(parser.getAttributeValue(null, "percentage"));
-                    // Add the percentage to the list of percentages
-                    percentages.add(percentage);
-                    // Retrieve the text value of the "item" tag
-                    String text = parser.nextText();
-                    // Add the text to the list of random texts
-                    randomTexts.add(text);
-                }
-            }
-        } catch (IOException | XmlPullParserException e) {
-            // Print the stack trace if there is an error in reading the XML file
-            e.printStackTrace();
-        }
-        // Read the current coin count from the XML file
-        coincount = XmlReader.readFromXml(getApplicationContext(), "coin_save.xml");
-
-        // Display the current coin count in the textView
-        textView_count.setText(String.valueOf(coincount));
-
-        // Set the onClickListener for the button
-        button.setOnClickListener(v -> {
-            randomPercentage = random.nextInt(100);
-            // Initialize the accumulatedPercentage
-            int accumulatedPercentage = 0;
-            // Loop through all the percentages
-            for (int i = 0; i < percentages.size(); i++) {
-                accumulatedPercentage += percentages.get(i);
-                if (randomPercentage <= accumulatedPercentage) {
-                    textView.setText(randomTexts.get(i));
-                    // If the text is "You found a coin on the ground", increment the coin count
-                    if (randomTexts.get(i).equals("You found a coin on the ground")) {
-                        coincount++;
-                    }
-                    break;
-                }
-            }
-            textView_count.setText(String.valueOf(coincount));
-            // Call the writeToXml method to save the updated coin count to the XML file
-            XmlWriter.writeToXml(v.getContext(), coincount);
-        });
+        PercentageEvent randomTextGenerator = new PercentageEvent(this);
+        randomTextGenerator.generateRandomText(textView, textView_count, button);
 
 
         // Start new activity when inventory button is clicked
@@ -127,8 +77,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent12);
         });
 
-        String location = getIntent().getStringExtra("location");
-        TextView locationTextView = findViewById(R.id.location_text_view);
-        locationTextView.setText(location);
+
     }
 }
