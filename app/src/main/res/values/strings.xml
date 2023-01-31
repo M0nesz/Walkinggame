@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Walkinggame</string>
+    <string name="walk">Walk</string>
+    <string name="coins">Coins</string>
+    <string name="_0">0</string>
+    <string name="inventory">Inventory</string>
+    <string name="back">Back</string>
+    <string name="map">Map</string>
+    <string name="log">Log</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#DCD7C9</color>
+    <color name="texts">#000000</color>
+    <color name="button">#A27B5C</color>
+    <color name="gridtextbackground">#3F4E4F</color>
+    <color name="gridbackground">#2C3639</color>
+    <color name="white">#3F4E4F</color>
+    <color name="black">#3F4E4F</color>
+
+</resources>
