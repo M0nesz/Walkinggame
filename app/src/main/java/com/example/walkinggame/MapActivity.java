@@ -3,36 +3,42 @@ package com.example.walkinggame;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 
+
 public class MapActivity extends AppCompatActivity {
+    public static String choosen_location;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Set the content view to map_activity.xml
         setContentView(R.layout.map_activity);
 
         // Create an intent for the MainActivity class
         Intent mainIntent = new Intent(this, MainActivity.class);
 
-        // Find the back button in the layout
         Button backButton = findViewById(R.id.back_button);
+        Button castle_button = findViewById(R.id.castle_button);
+        Button woodsButton = findViewById(R.id.woods_button);
+        TextView textView3 = findViewById(R.id.textView3);
 
         // Set an onClickListener for the back button
         backButton.setOnClickListener(v -> startActivity(mainIntent));
 
-        // Find the woods button in the layout
-        Button woodsButton = findViewById(R.id.woods_button);
-
-        // Set an onClickListener for the woods button
         woodsButton.setOnClickListener(v -> {
-            // Create an intent for the MainActivity class with "location" extra set to "Woods"
-            Intent intent = new Intent(MapActivity.this, MainActivity.class);
-            intent.putExtra("location", "Woods");
-            startActivity(intent);
+            Intent woodsIntent = new Intent(MapActivity.this, MainActivity.class);
+            woodsIntent.putExtra("location", "Woods");
+            choosen_location = "Woods";
+            startActivity(woodsIntent);
+        });
+        castle_button.setOnClickListener(v -> {
+            Intent mainCastleActivityIntent = new Intent(MapActivity.this, MainActivity.class);
+            mainCastleActivityIntent.putExtra("choosen_location", choosen_location);
+            startActivity(mainCastleActivityIntent);
+            choosen_location = "Castle";
         });
     }
 }

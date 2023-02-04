@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<random_texts>
+    <item location="woods" percentage="15">You found a coin on the ground</item>
+    <item location="woods" percentage="60">You're walking...</item>
+    <item location="woods" percentage="25">You look around and thinking were are you</item>
+
+    <item location="castle" percentage="25">Castle action 1</item>
+    <item location="castle" percentage="25">Castle action 2</item>
+    <item location="castle" percentage="25">Castle action 3</item>
+
+
+</random_texts>

@@ -9,72 +9,62 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class PercentageEvent {
-    // List to store percentage values for each random text
-    private ArrayList<Integer> percentages = new ArrayList<>();
-    // List to store random text values
-    private ArrayList<String> randomTexts = new ArrayList<>();
-    // Object to generate random numbers
-    private Random random = new Random();
-    // Counter for number of coins
-    private int coincount;
+    private List<Integer> percentages = new ArrayList<>();
+    private List<String> actionTexts = new ArrayList<>();
+    private final Random random = new Random();
+    private TextView textView;
+    private Button button;
+    private int coinCount;
 
-    // Constructor for the PercentageEvent class
-    public PercentageEvent(Context context) {
+    public PercentageEvent(Context context, TextView textView, Button button) {
+        this.textView = textView;
+        this.button = button;
+        this.coinCount = XmlReader.readFromXml(context, "coin_count");
+
         try {
-            // Get the XML parser for the random_texts file
-            XmlPullParser parser = context.getResources().getXml(R.xml.random_texts);
-            while (parser.next() != XmlPullParser.END_DOCUMENT) {
-                // If the current event is a START_TAG and its name is "item"
-                if (parser.getEventType() == XmlPullParser.START_TAG && parser.getName().equals("item")) {
-                    // Get the percentage attribute value from the item tag
+            XmlPullParser parser = context.getResources().getXml(R.xml.action_texts);
+            String choosenLocation = "woods"; // assuming this value will come from an Intent in the onCreate method of the Activity
+
+            int eventType = parser.getEventType();
+            while (eventType != XmlPullParser.END_DOCUMENT) {
+                if (eventType == XmlPullParser.START_TAG && parser.getName().equals("item")) {
+                    String location = parser.getAttributeValue(null, "location");
                     int percentage = Integer.parseInt(parser.getAttributeValue(null, "percentage"));
-                    // Add the percentage to the list
-                    percentages.add(percentage);
-                    // Get the text value from the item tag
-                    String text = parser.nextText();
-                    // Add the text to the list
-                    randomTexts.add(text);
+                    if (location.equals(choosenLocation)) {
+                        percentages.add(percentage);
+                        actionTexts.add(parser.nextText());
+                    }
                 }
+                eventType = parser.next();
             }
-        } catch (IOException | XmlPullParserException e) {
-            // Print the stack trace of the exception
+        } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
-        // Read the coin count from the XML file
-        coincount = XmlReader.readFromXml(context, "coin_save.xml");
+    }
+    public int getCoinCount() {
+        return coinCount;
     }
 
-    // Method to generate a random text and update the coin count
-    public void generateRandomText(TextView textView, TextView textView_count, Button button) {
-        // Set an onClickListener for the button
-        button.setOnClickListener(v -> {
-            // Generate a random number between 0 and 100
-            int randomPercentage = random.nextInt(100);
-            // Accumulated percentage value
-            int accumulatedPercentage = 0;
-            // Loop through the list of percentages
-            for (int i = 0; i < percentages.size(); i++) {
-                // Add the current percentage to the accumulated percentage
-                accumulatedPercentage += percentages.get(i);
-                // If the random percentage is less than or equal to the accumulated percentage
-                if (randomPercentage <= accumulatedPercentage) {
-                    // Set the textView to the corresponding random text
-                    textView.setText(randomTexts.get(i));
-                    // increment the coin count when "You found a coin on the ground" is generated
-                    if (randomTexts.get(i).equals("You found a coin on the ground")) {
-                        coincount++;
-                    }
-                    // break the loop after finding the corresponding text
-                    break;
+
+    public String generateRandomText() {
+        int randomPercentage = random.nextInt(100);
+        int accumulatedPercentage = 0;
+        String generatedText = "";
+        for (int i = 0; i < percentages.size(); i++) {
+            accumulatedPercentage += percentages.get(i);
+            if (randomPercentage <= accumulatedPercentage) {
+                generatedText = actionTexts.get(i);
+                if (actionTexts.get(i).equals("You found a coin on the ground")) {
+                    coinCount++;
                 }
+                break;
             }
-            // set the text of the text view for the coin count to the current coin count
-            textView_count.setText(String.valueOf(coincount));
-            // write the current coin count to XML
-            XmlWriter.writeToXml(v.getContext(), coincount);
-        });
+        }
+        XmlWriter.writeToXml(button.getContext(), coinCount);
+        return generatedText;
     }
 }

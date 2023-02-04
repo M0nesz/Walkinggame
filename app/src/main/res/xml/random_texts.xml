@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<random_texts>
-    <item location="woods" percentage="15">You found a coin on the ground</item>
-    <item location="notwoods" percentage="60">You're walking...</item>
-    <item location="notwoods" percentage="25">You look around and thinking were are you</item>
-</random_texts>
